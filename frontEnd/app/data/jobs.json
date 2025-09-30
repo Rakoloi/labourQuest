@@ -1,0 +1,86 @@
+[
+  {
+    "title": "House Cleaner",
+    "description": "Clean a 2-bedroom house including kitchen and bathroom.",
+    "year": 2025,
+    "category": "Cleaning",
+    "pay": "R550"
+  },
+  {
+    "title": "Laundry Assistant",
+    "description": "Wash, dry, and iron clothes for a family of four.",
+    "year": 2025,
+    "category": "Laundry",
+    "pay": "R230"
+  },
+  {
+    "title": "Nanny",
+    "description": "Look after 2 children (ages 4 and 7) for 6 hours.",
+    "year": 2025,
+    "category": "Childcare",
+    "pay": "R160"
+  },
+  {
+    "title": "Painter",
+    "description": "Paint the living room walls and ceiling with provided paint.",
+    "year": 2025,
+    "category": "Home Improvement",
+    "pay": "R1800"
+  },
+  {
+    "title": "Gardener",
+    "description": "Trim grass, water plants, and clean the yard.",
+    "year": 2025,
+    "category": "Gardening",
+    "pay": "R850"
+  },
+  {
+    "title": "Car Washer",
+    "description": "Wash and vacuum 2 family cars inside and out.",
+    "year": 2025,
+    "category": "Cleaning",
+    "pay": "R105"
+  },
+  {
+    "title": "Mover",
+    "description": "Help carry and load furniture into a moving truck.",
+    "year": 2025,
+    "category": "Manual Labor",
+    "pay": "R280"
+  },
+  {
+    "title": "Dishwasher",
+    "description": "Wash dishes and clean kitchen for a small restaurant.",
+    "year": 2025,
+    "category": "Kitchen Help",
+    "pay": "R300"
+  },
+  {
+    "title": "Dog Walker",
+    "description": "Walk two dogs around the neighborhood for 1 hour.",
+    "year": 2025,
+    "category": "Pet Care",
+    "pay": "R120"
+  },
+  {
+    "title": "Street Vendor Helper",
+    "description": "Assist with setting up and packing a small street food stall.",
+    "year": 2025,
+    "category": "Casual Work",
+    "pay": "125"
+  },
+  {
+    "title": "Security Guard",
+    "description": "Provide overnight security for a small event.",
+    "year": 2025,
+    "category": "Security",
+    "pay": "170"
+  },
+  {
+    "title": "Delivery Helper",
+    "description": "Assist in delivering groceries in the neighborhood.",
+    "year": 2025,
+    "category": "Delivery",
+    "pay": "845"
+  }
+]
