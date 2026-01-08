@@ -1,10 +1,18 @@
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState, } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useLocalSearchParams } from "expo-router";
 
+//import icons
 import { Ionicons } from '@expo/vector-icons';
 import SearchInput from "../components/SearchInput";
+import Loader from "../components/Loading";
 import jobs from '../data/jobs.json';
+
+//import firebase
+import { db } from "@/config";
+import { collectionGroup, doc, getDoc, getDocs, onSnapshot, setDoc } from "firebase/firestore";
 
 type Job = {
   title: string;
@@ -17,20 +25,59 @@ type Job = {
 const HomeScreen = () => {
     const[search, setSearch] = useState("");
     const [activeIcon, setActiveIcon] = useState<"create" | "person" | null>(null);
+    const {email} = useLocalSearchParams();
+    const[isLoading, setIsLoading] = useState(false);
+    const [jobs, setJobs] = useState<Job[]>([]);
+    const [id, setId] = useState("")
+    //console.log("email in HomeScreen: "+email)
+
+    useEffect(() => {
+      setIsLoading(true);
+
+      //use real time listener in firebase:
+      const unsubscribe = onSnapshot(
+        collectionGroup(db, "JobsCreated"), (snapshot) => {
+          const jobsArray: Job[] = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            
+            return{
+              docId: doc.id,
+              title: data.JobTitle || 'No title',
+              description: data.JobDescription || 'No description',
+              year: data.createdAt
+                ? new Date(data.createdAt.seconds * 1000).getFullYear()
+                : new Date().getFullYear(),
+              category: data.category || 'General',
+              pay: data.Pay ? `R${data.Pay}` : 'R0',
+            }
+          });
+          setJobs(jobsArray);
+          setIsLoading(false);
+        }, (error) => {
+          console.error('Error fetching jobs in real-time:', error);
+          setIsLoading(false);
+        }
+      )
+
+      return () => unsubscribe();
+      
+    }, []);
 
     const IconExecute = (iconClicked: string) => {
         if(iconClicked == "account"){
             console.log("account icon is clicked")
             router.push('./UserAccount')
+            
         }
         else if(iconClicked == "create"){
             //window.alert("create a job")
-            router.push('./CreateJob')
+            //router.push('./CreateJob')
+            router.push({pathname: "./CreateJob", params: {email: email}})
         }
     }
 
     const renderItem = ({ item }: { item: Job }) => (
-    <TouchableOpacity style={styles.card} onPress={() => router.push({pathname:"./DisplayJob", params: { job: JSON.stringify(item) }})}>
+    <TouchableOpacity style={styles.card} onPress={() => router.push({pathname:"./DisplayJob", params: { job: JSON.stringify(item), email: email }})}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.pay}>{item.pay}</Text>
@@ -48,6 +95,7 @@ const HomeScreen = () => {
 
     return(
         <View style={{backgroundColor: 'white', height: '100%', paddingTop: '10%'}}>
+          {isLoading && <Loader />}
             <View style={styles.container}>
                 <Ionicons 
                     name='person-outline' 
@@ -71,6 +119,7 @@ const HomeScreen = () => {
                 />
                                 
             </View>
+            
             <View>
                 {/* write the code here */}
                 <FlatList

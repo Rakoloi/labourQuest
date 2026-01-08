@@ -2,27 +2,53 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { router, useRouter } from "expo-router";
 
+//import components
 import Input from "./components/Input";
 import Button from "./components/Button";
+import UserAuth from "./logic/userAuth";
+import Loader from "./components/Loading";
 
 export default function Index() {
+
   const[email, setEmail] = useState("");
   const[password, setPassword] = useState("");
+  const[isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    router.push("./screens/HomeScreen");
+  const handleLogin = async() => {
+
+    setIsLoading(true);
+    if(email != "" && password != ""){
+      try{
+        const userLogin = UserAuth(email, password)
+        if((await userLogin).results){
+          router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
+        }
+        else{
+          console.log((await userLogin).message);
+        }
+      }catch(err: any){
+        console.log("Login failed. please try again.");
+        window.alert("unable to login");
+        setIsLoading(false);
+      }
+    }else{
+      window.alert("all fields are required");
+      setIsLoading(false);
+    }
+    //router.push("./screens/HomeScreen");
   }
   return (
     <View style={styles.container}>
-
+      {isLoading && <Loader />}
       <View style={styles.form}>
+
         <Image 
           source={require("../assets/images/logo.jpg")}
           style={styles.logo}
         />
-
         <Text style={styles.title}>Welcome Back</Text>
-      <Text style={styles.subtitle}>Login to continue</Text>
+        <Text style={styles.subtitle}>Login to continue</Text>
+         
         <Input 
           label="Email"
           placeholder="email"
@@ -34,8 +60,8 @@ export default function Index() {
         <Input 
           label="Password"
           placeholder="password"
-          value={email}
-          onChangeText={setEmail}
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry = {true}
         />
       </View>

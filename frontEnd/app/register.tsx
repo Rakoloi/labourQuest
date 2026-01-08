@@ -11,6 +11,8 @@ import {
 import Button from "./components/Button";
 import Input from "./components/Input";
 import Dropdown from "./components/Dropdown";
+import Loader from "./components/Loading";
+import CreateAccount from "./logic/createAccount";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -22,9 +24,27 @@ const Register = () => {
   const [profilePic, setProfilePic] = useState("");
   const [location, setLocation] = useState("");
   const [avalabilty, setAvailability] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const FormSubmit = () => {
-    router.push("./screens/HomeScreen");
+  const FormSubmit = async() => {
+    //router.push("./screens/HomeScreen");
+    if(password == confirmPassword){
+
+      if(!phoneNum && !email && !name && !surname && !password && !confirmPassword && !location && !avalabilty){
+        console.log("all fields are required");
+      }else{
+        const createUser = CreateAccount(name, surname, email, phoneNum, password, location, avalabilty);
+        if((await createUser).results){
+          //router.push("./screens/HomeScreen");
+          router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
+        }else{
+          console.log((await createUser).message);
+        }
+      }
+      
+    }else{
+      window.alert("password dont match..");
+    }
   };
 
   return (
@@ -32,10 +52,12 @@ const Register = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}
     >
+      {isLoading && <Loader />}
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
+        
         <Text style={styles.title}>Create Account</Text>
 
         <View style={styles.form}>

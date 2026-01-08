@@ -3,6 +3,11 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";
+import PostJob from "../logic/postJob";
+import Loader from "../components/Loading";
+import { isSearchBarAvailableForCurrentPlatform } from "react-native-screens";
+import { useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 
 const CreateJob = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -12,16 +17,28 @@ const CreateJob = () => {
   const [pay, setPay] = useState("");
   const [payType, setPayType] = useState("");
   const [startDate, setStartDate] = useState(""); //job start date
-  const [jobOpening, setJobOpening] = useState("");
+  const [jobOening, setJobOpening] = useState("");
   const [jobPictures, setJobPictures] = useState([]);
+  const {email} = useLocalSearchParams();
+  const userEmail = typeof email === "string" ? email : email?.[0];
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-
-  const Create = () => {
+  const Create = async() => {
     // handle create logic
+    setIsLoading(true);
+
+    if(jobTitle && description && location && contact && pay && payType){
+      const job = PostJob(userEmail, jobTitle, location, contact, pay, payType, description);
+      console.log("message: "+(await job).message)
+      //setIsLoading(false);
+      router.back();
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {isLoading && <Loader />}
       <Text style={styles.header}>Create Job</Text>
 
       <View style={styles.form}>

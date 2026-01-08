@@ -1,6 +1,10 @@
-import { useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import Button from "../components/Button";
+import Accept from "../logic/acceptJob";
+import Loader from "../components/Loading";
+import SuccessPopUp from "../components/successPopUp";
+import { useState } from "react";
 
 type Job = {
   title: string;
@@ -8,12 +12,17 @@ type Job = {
   year: number;
   category: string;
   pay: string;
+  docId: string;
 };
 
 const DisplayJob = () => {
 
-    const {job} = useLocalSearchParams();
+    const {job,email} = useLocalSearchParams();
+    const userEmail = email as string;
     const jobData: Job | null = job ? JSON.parse(job as string) : null;
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const[showSuccessModal, setSuccessModal] = useState(false);
 
     if (!jobData) {
         return (
@@ -23,11 +32,28 @@ const DisplayJob = () => {
         );
     }
 
-    const AcceptJob = () => {
-        window.alert("job saved");
+    const AcceptJob = async() => {
+        setIsLoading(true);
+        //console.log("email: "+userEmail);
+        const acceptResults = await Accept(jobData.docId, userEmail);
+        if(acceptResults.result){
+          setIsLoading(false);
+          //router.back();
+          setSuccessModal(true);
+        }else{
+          setIsLoading(false);
+        }
     }
+
+    const handleOk = () => {
+      setSuccessModal(false);
+      router.back();
+    }
+
     return(
         <View style={styles.container}>
+          {isLoading && <Loader />}
+          {showSuccessModal && <SuccessPopUp size={250} message="Job Accepted!" onOk={handleOk} />}
             <Text style={styles.title}>{jobData.title}</Text>
             <Text style={styles.pay}>{jobData.pay}</Text>
             <Text style={styles.category}>{jobData.category}</Text>
