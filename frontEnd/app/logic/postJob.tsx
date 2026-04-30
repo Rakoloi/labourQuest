@@ -9,7 +9,7 @@ interface jobResults {
 }
 
 const PostJob = async(email: string, jobTitle: string, location: string, phone: string, pay: string, payType: string, jobDescription: string): Promise<jobResults> => {
-    
+    console.log(email);
     try{
         const jobId = Crypto.randomUUID();
         await setDoc(doc(db, "Users", email, "JobsCreated", jobId), {

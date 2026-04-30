@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { router, useRouter } from "expo-router";
+import { useAuth } from "./context/AuthContext";
 
 //import components
 import Input from "./components/Input";
@@ -8,28 +9,39 @@ import Button from "./components/Button";
 import UserAuth from "./logic/userAuth";
 import Loader from "./components/Loading";
 
+
+
 export default function Index() {
 
-  const[email, setEmail] = useState("");
+  const[userEmail, setUserEmail] = useState("");
   const[password, setPassword] = useState("");
   const[isLoading, setIsLoading] = useState(false);
+  const { setEmail } = useAuth();
 
   const handleLogin = async() => {
 
+    //bypass login :Temporary
+    //router.replace({pathname: "/(tabs)/HomeScreen" });
+
+    //set the email value globally:
+    setEmail(userEmail);
+
     setIsLoading(true);
-    if(email != "" && password != ""){
+    if(userEmail != "" && password != ""){
       try{
-        const userLogin = UserAuth(email, password)
+        const userLogin = UserAuth(userEmail, password)
         if((await userLogin).results){
-          router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
+          //router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
+          router.replace({pathname: "/(tabs)/HomeScreen"});
         }
         else{
           console.log((await userLogin).message);
+          setIsLoading(false);
         }
       }catch(err: any){
-        console.log("Login failed. please try again.");
         window.alert("unable to login");
         setIsLoading(false);
+        console.log("Login failed. please try again. "+ err);
       }
     }else{
       window.alert("all fields are required");
@@ -39,7 +51,8 @@ export default function Index() {
   }
   return (
     <View style={styles.container}>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
+      <Loader visible={isLoading} message="Loggin in" />
       <View style={styles.form}>
 
         <Image 
@@ -52,8 +65,8 @@ export default function Index() {
         <Input 
           label="Email"
           placeholder="email"
-          value={email}
-          onChangeText={setEmail}
+          value={userEmail}
+          onChangeText={setUserEmail}
           secureTextEntry = {false}
         />
 

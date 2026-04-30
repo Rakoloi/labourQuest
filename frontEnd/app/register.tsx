@@ -36,9 +36,14 @@ const Register = () => {
         const createUser = CreateAccount(name, surname, email, phoneNum, password, location, avalabilty);
         if((await createUser).results){
           //router.push("./screens/HomeScreen");
-          router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
+          router.replace({pathname: "/(tabs)/HomeScreen", params: {email: email}});
         }else{
-          console.log((await createUser).message);
+          //console.log((await createUser).message);
+          //const error = (await createUser).message;
+          if((await createUser).message == "Firebase: Error (auth/email-already-in-use)."){
+            alert("email already exists...")
+          }
+          //alert(error);
         }
       }
       
@@ -52,7 +57,7 @@ const Register = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}
     >
-      {isLoading && <Loader />}
+      {isLoading && <Loader visible={isLoading} message="Creating account" />}
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}

@@ -26,8 +26,8 @@ const CreateAccount = async(name: string, surname: string, email: string, phoneN
         
         return {results: true, message: ""};
     }catch(err: any){
-        console.log(err.message);
-        return {results: false, message: ""}
+        //console.log(err.message);
+        return {results: false, message: err.message}
     }
 }
 

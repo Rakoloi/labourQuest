@@ -1,4 +1,6 @@
 import { TextInput, View, StyleSheet, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 
 type inputProps = {
 
@@ -8,14 +10,23 @@ type inputProps = {
 }
 
 const SearchInput = ({placeholder, value, onChangeText}:inputProps) => {
+  const [isFocused, setIsFocused] = useState(false);
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, isFocused && styles.containerFocused]}>
+          <Ionicons
+                name="search"
+                size={18}
+                color={isFocused ? "#17B169" : "#888"}
+                style={styles.icon}
+            />
             <TextInput 
                 style={styles.input}
                 placeholder={placeholder}
                 value={value}
                 onChangeText={onChangeText}
                 placeholderTextColor="#888"
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
             />
         </View>
     )
@@ -25,23 +36,27 @@ export default SearchInput;
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
-    //marginBottom: 16,
-  },
-  label: {
-    marginBottom: 6,
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-  },
-  input: {
+    //width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1.3,
     borderColor: "#ccc",
     borderRadius: 8,
     paddingHorizontal: 12,
+    //backgroundColor: "#fff",
+  },
+  
+  input: {
+    flex: 1,
     paddingVertical: 10,
     fontSize: 16,
     color: "#000",
-    backgroundColor: "#fff",
   },
+  icon: {
+    marginRight: 8,
+  },
+  containerFocused: {
+    borderColor: "#17B169",
+  },
+
 });
