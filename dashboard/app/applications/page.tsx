@@ -1,5 +1,5 @@
 import Sidebar from "@/components/sidebar";
-import { TextField, Button, Card, CardContent, FormControl, InputLabel, Select, MenuItem, Chip } from "@mui/material";
+import { Button, Card, CardContent, FormControl, InputLabel, Select, MenuItem, Chip } from "@mui/material";
 import { FileText, UserCheck, UserX, Eye } from 'lucide-react';
 
 const Applications = () => {

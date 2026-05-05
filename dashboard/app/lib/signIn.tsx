@@ -12,10 +12,11 @@ const SignIn = async(email: string, password: string): Promise<signInResults> =>
 
     //verify if the email is correct:
     try{
-        //const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         
         const docRef = doc(db, "Admins", email);
         const docSnap = await getDoc(docRef);
+
         if(docSnap.exists()){
             console.log(docSnap.data().AccountStatus);
             if(docSnap.data().AccountStatus != "Active"){
@@ -24,6 +25,7 @@ const SignIn = async(email: string, password: string): Promise<signInResults> =>
             }
             else{
                 //route.push('/dashboard');
+
                 return {results: true, message: "logged in"}
             }
         }else{
