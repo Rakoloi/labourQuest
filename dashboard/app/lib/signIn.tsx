@@ -13,7 +13,7 @@ const SignIn = async(email: string, password: string): Promise<signInResults> =>
     //verify if the email is correct:
     try{
         const userCredentials = await signInWithEmailAndPassword(auth, email, password);
-
+        
         const docRef = doc(db, "Admins", email);
         const docSnap = await getDoc(docRef);
         if(docSnap.exists()){
@@ -29,6 +29,7 @@ const SignIn = async(email: string, password: string): Promise<signInResults> =>
         }else{
                     //console.log("document does not exist");
             //setError("user account does not exist");
+            console.log("account does not exist");
             return {results: false, message: "user account does not exist"}
         }
     }catch{

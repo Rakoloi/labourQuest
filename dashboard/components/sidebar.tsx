@@ -48,6 +48,7 @@ export default function Sidebar(){
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-grey-700">
             <div className="flex items-center justify-between">
                 {/* displau user profile and their name next to it */}
+                <p>mosa</p>
             </div>
         </div>
     </div>;

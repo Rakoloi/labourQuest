@@ -40,6 +40,7 @@ const LoginPage = () => {
         //route.push('/dashboard');
         setIsLoading(true);
         if(userEmail != "" || password != ""){
+
             try{
                 const loginStatus = SignIn(userEmail, password);
                 if((await loginStatus).results){
@@ -48,14 +49,16 @@ const LoginPage = () => {
                     //setIsLoading(false);
                 }
                 else{
-                    setError((await loginStatus).message);
+                    //setError((await loginStatus).message);
                     console.log("the login status is: "+ (await loginStatus).results);
                     setIsLoading(false);
                 }
                 
             }catch(err: any){
-                console.log(err.message);               
-                setError("Login failed. please try again.");
+                console.log("error: "); 
+                setError(err.message); 
+                console.log("error set to: "+ error);             
+                //setError("Login failed. please try again.");
                 setIsLoading(false);               
             }
         }else{
@@ -70,7 +73,7 @@ const LoginPage = () => {
                 <div className="mb-5 text-center">
                     <h1 className="text-3xl font-bold text-white">Sign In</h1>
                     <p className="text-sm text-slate-400 mt-2">
-                        log into your <span className="text-[#00D26A] font-medium">selfEmploy</span> account
+                        log into your <span className="text-[#00D26A] font-medium">SelfEmploy</span> account
                     </p>
                 </div>
 
