@@ -1,7 +1,7 @@
 import Sidebar from "@/components/sidebar";
 import { Users, TrendingUp, BarChart3, Map } from "lucide-react";
-import { Card, CardContent, Box } from "@mui/material";
-import { BarChart } from "@mui/x-charts";
+// import { Card, CardContent, Box } from "@mui/material";
+// import { BarChart } from "@mui/x-charts";
 
 const Analytics = () => {
     return(

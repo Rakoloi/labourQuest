@@ -21,8 +21,9 @@ const CreateUserAccount = async(name: string, surname: string, email: string, pa
 
         return {success: true, message: ""};
 
-    }catch(err:any){
-        console.log(err.message);
+    }catch(err: unknown){
+        const errMessage = err instanceof Error ? err.message : String(err);
+        console.log(errMessage);
         return {success: false, message: ""}
     }
 

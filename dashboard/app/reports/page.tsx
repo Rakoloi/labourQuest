@@ -80,7 +80,7 @@ const Reports = () => {
                                         </div>
                                                 <Chip
                                                     label={report.status}
-                                                    color={statusColor(report.status) as any}
+                                                    color={statusColor(report.status) as "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning"}
                                                     size="small"
                                                 />
                                     </div>

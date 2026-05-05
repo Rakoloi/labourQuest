@@ -1,7 +1,6 @@
 import Sidebar from "@/components/sidebar"
-import { Card, CardContent, MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material';
+import { Card, CardContent, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { TextField } from '@mui/material';
-import { Briefcase } from 'lucide-react';
 //import { motion } from 'framer-motion';
 
 const Jobs = () => {

@@ -1,8 +1,8 @@
 "use client";
 
-import { Alert, Button, Typography, InputAdornment } from "@mui/material";
+import { Alert, Button, Typography } from "@mui/material";
 import { useState } from "react";
-import { Mail, Lock, EyeOff, Eye, User } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 import InputField from "@/components/inputField";
 import CreateUserAccount from "../lib/createAccount";
 import Loader from "@/components/loader";
@@ -16,7 +16,7 @@ const RegisterUser = () => {
     const[name, setName] = useState('');
     const[surname, setSurname] = useState('');
     const[password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    //const [showPassword, setShowPassword] = useState(false);
     const[error, setError] = useState("");
     const[isLoading, setIsLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);

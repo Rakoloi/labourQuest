@@ -3,7 +3,7 @@ import { Slider } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
 
 //firebase imports
-import {auth, db} from "../../config";
+import {auth} from "../../config";
 
 //icons imports
 import { Users } from "lucide-react";

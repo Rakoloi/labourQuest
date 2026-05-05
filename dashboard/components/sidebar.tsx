@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Users, FileUser, ClipboardPlus, Layers, ChartArea, DollarSign, Notebook, Settings, Pickaxe } from "lucide-react"
+import { BarChart3, Users, FileUser, ClipboardPlus, ChartArea, DollarSign, Pickaxe } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

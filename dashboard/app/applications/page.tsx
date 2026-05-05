@@ -162,7 +162,7 @@ const Applications = () => {
                                     </div>
                                     <Chip
                                         label={app.status}
-                                        color={statusColor(app.status) as any}
+                                        color={statusColor(app.status) as "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning"}
                                         size="small"
                                     />
                                 </div>

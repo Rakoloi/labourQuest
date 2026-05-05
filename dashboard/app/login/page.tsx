@@ -1,17 +1,13 @@
 "use client";
 
 import {
-Card,
-CardContent,
-TextField,
 Button,
 Typography,
-Divider,
-IconButton,
+
 Alert,
 } from "@mui/material";
-import { Lock, Mail, ShieldCheck, Eye, EyeOff } from "lucide-react";
-import { use, useState } from "react";
+import {Mail} from "lucide-react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 //custom imports
@@ -19,14 +15,10 @@ import InputField from "@/components/inputField";
 import SignIn from "../lib/signIn";
 import Loader from "@/components/loader";
 
-//firebase imports
-import {auth, db} from "../../config";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 
 const LoginPage = () => {
 
-    const [showPassword, setShowPassword] = useState(false);
+    //const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const route = useRouter();
 
@@ -54,9 +46,10 @@ const LoginPage = () => {
                     setIsLoading(false);
                 }
                 
-            }catch(err: any){
-                console.log("error: "); 
-                setError(err.message); 
+            }catch(err: unknown){
+                console.log("error: ");
+                const errFound = err instanceof Error ? err.message : String(error); 
+                setError(errFound); 
                 console.log("error set to: "+ error);             
                 //setError("Login failed. please try again.");
                 setIsLoading(false);               

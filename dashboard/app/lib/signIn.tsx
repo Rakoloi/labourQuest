@@ -12,7 +12,7 @@ const SignIn = async(email: string, password: string): Promise<signInResults> =>
 
     //verify if the email is correct:
     try{
-        const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+        //const userCredentials = await signInWithEmailAndPassword(auth, email, password);
         
         const docRef = doc(db, "Admins", email);
         const docSnap = await getDoc(docRef);

@@ -1,9 +1,8 @@
 "use client"
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 
 export default function Home() {
   const router = useRouter();
