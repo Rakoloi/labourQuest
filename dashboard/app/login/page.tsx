@@ -82,7 +82,7 @@ const LoginPage = () => {
                 </div>
 
                 <div className="mt-10">
-                    <InputField label="Email" placeholder="••••••••" type="password" value={password} icon={Mail} onChange={(e) => setUserPassword(e.target.value)}/>
+                    <InputField label="Password" placeholder="••••••••" type="password" value={password} icon={Mail} onChange={(e) => setUserPassword(e.target.value)}/>
                 </div>
 
                 <div className="space-y-4 mt-7">
