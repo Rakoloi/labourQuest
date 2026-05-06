@@ -70,6 +70,8 @@ export default function Home() {
             src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop"
             alt="People working together"
             className="h-full w-full object-cover"
+            width={150}
+            height={150}
           />
 
 
