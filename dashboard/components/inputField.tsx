@@ -7,10 +7,11 @@ interface MUIInputProps {
     icon: React.ElementType;
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    testId?: string; 
 }
 
 
-export default function InputField({ label, placeholder, type = "text", icon: Icon, value, onChange }: MUIInputProps) {
+export default function InputField({ label, placeholder, type = "text", icon: Icon, value, onChange, testId}: MUIInputProps) {
     return (
         <TextField
             fullWidth
@@ -20,6 +21,9 @@ export default function InputField({ label, placeholder, type = "text", icon: Ic
             value={value}
             onChange={onChange}
             InputLabelProps={{ style: { color: "#cbd5f5" } }}
+            inputProps={{
+                'data-testid': testId  // add this
+            }}
             InputProps={{
                 startAdornment: (
                     <InputAdornment position="start">

@@ -78,11 +78,11 @@ const LoginPage = () => {
                 {isLoading && <Loader />}
 
                 <div>
-                    <InputField label="Email" placeholder="example@gmail.com" value={userEmail} icon={Mail} onChange={(e) => setUserEmail(e.target.value)}/>
+                    <InputField testId="Email" label="Email" placeholder="example@gmail.com" value={userEmail} icon={Mail} onChange={(e) => setUserEmail(e.target.value)}/>
                 </div>
 
                 <div className="mt-10">
-                    <InputField label="Password" placeholder="••••••••" type="password" value={password} icon={Mail} onChange={(e) => setUserPassword(e.target.value)}/>
+                    <InputField testId="Password" label="Password" placeholder="••••••••" type="password" value={password} icon={Mail} onChange={(e) => setUserPassword(e.target.value)}/>
                 </div>
 
                 <div className="space-y-4 mt-7">
