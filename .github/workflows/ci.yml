@@ -40,6 +40,10 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
         working-directory: e2e
+
+      - name: Install e2e dependencies
+        run: npm install
+        working-directory: e2e
         
       - name: Run Playwright tests
         run: npx playwright test
