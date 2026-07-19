@@ -13,42 +13,55 @@ import Input from "./components/Input";
 import Dropdown from "./components/Dropdown";
 import Loader from "./components/Loading";
 import CreateAccount from "./logic/createAccount";
+import { useAuth } from "./context/AuthContext";
+
+//Zod and useForm imports for validations.
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  registerSchema,
+  RegisterFormData
+} from "../schemas/registerSchema";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      surname: "",
+      cellPhone: "",
+      email: "",
+      location: "",
+      password: "",
+      confirmPassword: "",
+    },
+    mode: "onChange",
+    reValidateMode: "onChange",
+  });
+
   const [profilePic, setProfilePic] = useState("");
-  const [location, setLocation] = useState("");
   const [avalabilty, setAvailability] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { setEmail } = useAuth();
 
-  const FormSubmit = async() => {
+  const FormSubmit = async(data: RegisterFormData) => {
     //router.push("./screens/HomeScreen");
-    if(password == confirmPassword){
-
-      if(!phoneNum && !email && !name && !surname && !password && !confirmPassword && !location && !avalabilty){
-        console.log("all fields are required");
-      }else{
-        const createUser = CreateAccount(name, surname, email, phoneNum, password, location, avalabilty);
-        if((await createUser).results){
-          //router.push("./screens/HomeScreen");
-          router.replace({pathname: "/(tabs)/HomeScreen", params: {email: email}});
-        }else{
-          //console.log((await createUser).message);
-          //const error = (await createUser).message;
-          if((await createUser).message == "Firebase: Error (auth/email-already-in-use)."){
-            alert("email already exists...")
-          }
-          //alert(error);
-        }
-      }
-      
+    setIsLoading(true)
+    const {name, surname, cellPhone, email, location, password} = data;
+    const createUser = CreateAccount(name, surname, email, cellPhone, password, location, avalabilty);
+    if((await createUser).results){
+      setEmail(email)
+      router.push("/(tabs)/HomeScreen");
+      setIsLoading(false);
     }else{
-      window.alert("password dont match..");
+      //display error that account was unable to be created.
+      window.alert("unable to create an account, please try again...");
+      setIsLoading(false);
     }
   };
 
@@ -66,55 +79,84 @@ const Register = () => {
         <Text style={styles.title}>Create Account</Text>
 
         <View style={styles.form}>
-          <Input
-            label="Name"
-            placeholder="Enter your name"
-            value={name}
-            onChangeText={setName}
-            secureTextEntry={false}
+           
+          <Controller 
+            control={control}
+            name="name"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Name"
+                placeholder="Enter your name"
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry={false}
+                error={errors.name?.message}
+              />
+            )}
           />
-          <Input
-            label="Surname"
-            placeholder="Enter your surname"
-            value={surname}
-            onChangeText={setSurname}
-            secureTextEntry={false}
+
+          <Controller 
+            control={control}
+            name="surname"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Surname"
+                placeholder="Enter your surname"
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry={false}
+                error={errors.surname?.message}
+              />
+            )}
           />
-          <Input
-            label="Phone"
-            placeholder="Enter your phone number"
-            value={phoneNum}
-            onChangeText={setPhoneNum}
-            secureTextEntry={false}
+
+          <Controller 
+            control={control}
+            name="cellPhone"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Cellphone"
+                placeholder="Enter your phone numbers"
+                value={value}
+                onChangeText={onChange}
+                keyboardType="phone-pad"
+                secureTextEntry={false}
+                error={errors.cellPhone?.message}
+              />
+            )}
           />
-          <Input
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            secureTextEntry={false}
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Email"
+                placeholder="Email"
+                value={value}
+                onChangeText={onChange}
+                keyboardType="email-address"
+                error={errors.email?.message}
+                icon="mail-outline"
+              />
+            )}
           />
-          <Input
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={true}
+
+          <Controller
+            control={control}
+            name="location"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Location"
+                placeholder="Location"
+                value={value}
+                onChangeText={onChange}
+                error={errors.location?.message}
+                icon="location-outline"
+              />
+            )}
           />
-          <Input
-            label="Confirm Password"
-            placeholder="Re-enter your password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry={true}
-          />
-          <Input
-            label="location"
-            placeholder="location"
-            value={location}
-            onChangeText={setLocation}
-            secureTextEntry={false}
-          />
+
           <Dropdown
             label="availability"
             placeholder="availability"
@@ -123,8 +165,40 @@ const Register = () => {
             options={["full-time","part-time","weekends"]}
           />
 
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Password"
+                placeholder="Password"
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry
+                error={errors.password?.message}
+                icon="lock-closed-outline"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="confirm password"
+                placeholder="confirm password"
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry
+                error={errors.confirmPassword?.message}
+                icon="lock-closed-outline"
+              />
+            )}
+          />
+
           <View style={styles.buttonWrapper}>
-            <Button ButtonClick={FormSubmit} ButtonText="Sign Up" />
+            <Button ButtonClick={handleSubmit(FormSubmit)} ButtonText="Sign Up" />
           </View>
         </View>
       </ScrollView>

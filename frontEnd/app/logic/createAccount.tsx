@@ -3,6 +3,7 @@ import {auth, db} from "../../config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import {doc, setDoc} from "firebase/firestore"
 
+
 interface createResults{
     results: boolean,
     message: string
@@ -10,7 +11,6 @@ interface createResults{
 
 const CreateAccount = async(name: string, surname: string, email: string, phoneNumber: string, password: string, location: string, availability: string ): Promise<createResults> => {
     //check for email format
-
     try{
         await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, "Users", email), {
@@ -23,10 +23,10 @@ const CreateAccount = async(name: string, surname: string, email: string, phoneN
             Availability: availability,
         });
         //handle profile picture
-        
+        //console.log("account created");
         return {results: true, message: ""};
     }catch(err: any){
-        //console.log(err.message);
+        //console.log("account not created..."+err.message);
         return {results: false, message: err.message}
     }
 }

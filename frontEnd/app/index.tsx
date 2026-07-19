@@ -9,45 +9,60 @@ import Button from "./components/Button";
 import UserAuth from "./logic/userAuth";
 import Loader from "./components/Loading";
 
+//Zod and useForm imports for validations.
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  loginSchema,
+  LoginFormData,
+} from "../schemas/loginSchema";
+
 
 
 export default function Index() {
 
-  const[userEmail, setUserEmail] = useState("");
-  const[password, setPassword] = useState("");
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+} = useForm<LoginFormData>({
+  resolver: zodResolver(loginSchema),
+  defaultValues: {
+    email: "",
+    password: "",
+  },
+  mode: "onChange",
+  reValidateMode: "onChange",
+});
+
+  // const[userEmail, setUserEmail] = useState("");
+  // const[password, setPassword] = useState("");
   const[isLoading, setIsLoading] = useState(false);
   const { setEmail } = useAuth();
 
-  const handleLogin = async() => {
-
-    //bypass login :Temporary
-    //router.replace({pathname: "/(tabs)/HomeScreen" });
-
-    //set the email value globally:
-    setEmail(userEmail);
-
+  const handleLogin = async(data: LoginFormData) => {
     setIsLoading(true);
-    if(userEmail != "" && password != ""){
-      try{
-        const userLogin = UserAuth(userEmail, password)
-        if((await userLogin).results){
-          //router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
-          router.replace({pathname: "/(tabs)/HomeScreen"});
-        }
-        else{
-          console.log((await userLogin).message);
-          setIsLoading(false);
-        }
-      }catch(err: any){
+    const {email, password} = data;
+    setEmail(email);
+
+    try{
+      const userLogin = UserAuth(email, password)
+      if((await userLogin).results){
+        // router.replace({pathname: "/screens/HomeScreen", params: {email: email}});
+        //router.replace({pathname: "/(tabs)/HomeScreen"});
+
+        router.replace({pathname: "/(tabs)/HomeScreen", params: {email: email}});
+        setIsLoading(true);
+      }
+      else{
+        console.log((await userLogin).message);
+        setIsLoading(false);  
+      }
+    }catch(err: any){
         window.alert("unable to login");
         setIsLoading(false);
         console.log("Login failed. please try again. "+ err);
       }
-    }else{
-      window.alert("all fields are required");
-      setIsLoading(false);
-    }
-    //router.push("./screens/HomeScreen");
   }
   return (
     <View style={styles.container}>
@@ -61,33 +76,46 @@ export default function Index() {
         />
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>Login to continue</Text>
-         
-        <Input 
-          label="Email"
-          placeholder="email"
-          value={userEmail}
-          onChangeText={setUserEmail}
-          secureTextEntry = {false}
+
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label="Email"
+              placeholder="Email"
+              value={value}
+              onChangeText={onChange}
+              keyboardType="email-address"
+              error={errors.email?.message}
+              icon="mail-outline"
+            />
+          )}
         />
 
-        <Input 
-          label="Password"
-          placeholder="password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry = {true}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label="Password"
+              placeholder="Password"
+              value={value}
+              onChangeText={onChange}
+              secureTextEntry
+              error={errors.password?.message}
+              icon="lock-closed-outline"
+            />
+          )}
         />
+         
       </View>
 
-      {/* <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity> */}
-
-      <Button ButtonText="Login" ButtonClick={handleLogin}/>
+      <Button ButtonText="Login" ButtonClick={handleSubmit(handleLogin)}/>
 
       {/* Extra text */}
       <Text style={styles.footerText}>
-        Don’t have an account? <TouchableOpacity onPress={() => router.push("./register")}><Text style={styles.link}>Sign Up</Text></TouchableOpacity>
+        Dont have an account? <TouchableOpacity onPress={() => router.push("./register")}><Text style={styles.link}>Sign Up</Text></TouchableOpacity>
       </Text>
     </View>
   );
@@ -124,23 +152,7 @@ const styles = StyleSheet.create({
     gap: 20, // adds space between inputs
     marginBottom: 30,
   },
-  // button: {
-  //   backgroundColor: "#16A34A",
-  //   paddingVertical: 14,
-  //   borderRadius: 10,
-  //   alignItems: "center",
-  //   marginBottom: 20,
-  //   shadowColor: "#000",
-  //   shadowOpacity: 0.1,
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowRadius: 4,
-  //   elevation: 2,
-  // },
-  // buttonText: {
-  //   color: "#fff",
-  //   fontSize: 16,
-  //   fontWeight: "600",
-  // },
+
   footerText: {
     textAlign: "center",
     fontSize: 14,

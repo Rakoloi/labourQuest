@@ -2,73 +2,6 @@ import { TextInput, View, StyleSheet, Text, TouchableOpacity } from "react-nativ
 import { useState } from "react";  
 import { Ionicons } from "@expo/vector-icons";
 
-// type inputProps = {
-//   label?: string;
-//   placeholder?: string;
-//   value: string;
-//   onChangeText: (text: string) => void;
-//   secureTextEntry?: boolean;
-//   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad" | "number-pad" | "decimal-pad"; 
-// };
-
-// const Input = ({
-//   label,
-//   placeholder,
-//   value,
-//   onChangeText,
-//   secureTextEntry = false,
-//   keyboardType = "default", 
-// }: inputProps) => {
-//   const [isFocused, setIsFocused] = useState(false); 
-
-//   return (
-//     <View style={styles.container}>
-//       {label && <Text style={styles.label}>{label}</Text>}
-//       <TextInput
-//         style={[
-//           styles.input,
-//           isFocused && { borderColor: "green" }, 
-//         ]}
-//         placeholder={placeholder}
-//         value={value}
-//         onChangeText={onChangeText}
-//         secureTextEntry={secureTextEntry}
-//         placeholderTextColor="#888"
-//         cursorColor="green" // 
-//         keyboardType={keyboardType} // 
-//         onFocus={() => setIsFocused(true)} 
-//         onBlur={() => setIsFocused(false)} 
-//       />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     width: "100%",
-//     marginBottom: 16,
-//   },
-//   label: {
-//     marginBottom: 6,
-//     fontSize: 16,
-//     fontWeight: "500",
-//     color: "#333",
-//   },
-//   input: {
-//     borderWidth: 1.3,
-//     borderColor: "#ccc", // 
-//     borderRadius: 8,
-//     paddingHorizontal: 12,
-//     paddingVertical: 10,
-//     fontSize: 16,
-//     color: "#000",
-//     backgroundColor: "#fff",
-//   },
-// });
-
-// export default Input;
-
-
 type inputProps = {
   label?: string;
   placeholder?: string;
@@ -77,6 +10,7 @@ type inputProps = {
   secureTextEntry?: boolean;
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad" | "number-pad" | "decimal-pad";
   icon?: keyof typeof Ionicons.glyphMap; // CHANGED: optional left icon prop
+  error?: string; // NEW
 };
 
 const Input = ({
@@ -87,6 +21,7 @@ const Input = ({
   secureTextEntry = false,
   keyboardType = "default",
   icon, // CHANGED: destructured
+  error,
 }: inputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); // CHANGED: password toggle state
@@ -94,9 +29,20 @@ const Input = ({
   return (
     <View style={styles.container}>
       {label && <Text style={[styles.label, isFocused && styles.labelFocused]}>{label}</Text>}{/* CHANGED: label turns green on focus */}
-
+      
+      
+      {error && (<Text style={styles.errorText}>{error}</Text>)}
       {/* CHANGED: wrapper row holds icon + input + eye icon inside one border */}
-      <View style={[styles.inputRow, isFocused && styles.inputRowFocused]}>
+      {/* <View style={[styles.inputRow, isFocused && styles.inputRowFocused]}> */}
+      <View style={[
+        styles.inputRow,
+        error
+          ? styles.inputRowError
+          : isFocused
+          ? styles.inputRowFocused
+          : null,
+      ]}
+>
 
         {/* CHANGED: left icon, grey by default, green on focus */}
         {icon && (
@@ -133,6 +79,7 @@ const Input = ({
         )}
 
       </View>
+      
     </View>
   );
 };
@@ -183,6 +130,17 @@ const styles = StyleSheet.create({
     color: "#000",
     backgroundColor: "transparent", // CHANGED: transparent so inputRow bg shows
   },
+
+  inputRowError: {
+  borderColor: "#dc2626",
+},
+
+  errorText: {
+    color: "#dc2626",
+    fontSize: 12,
+    marginTop: 4,
+  },
+
 });
 
 export default Input;
