@@ -16,12 +16,9 @@ interface jobResults{
 //     docId: string;
 // }
 
-const Accept = async(docId: string, email: string): Promise<jobResults>  => {
-    //console.log(job.docId);
+const Accept = async(docId: string, email: string, jobOwner: string): Promise<jobResults>  => {
     try{
-        //get source document:
-        //console.log(email +" "+docId)
-        const sourceRef = doc(db, "Users", email, "JobsCreated", docId);
+        const sourceRef = doc(db, "Users", jobOwner, "JobsCreated", docId);
 
         //Read the file data:
         const snapshot = await getDoc(sourceRef);
@@ -31,7 +28,6 @@ const Accept = async(docId: string, email: string): Promise<jobResults>  => {
         }
         const jobData = snapshot.data();
 
-        //new destination document (jobsAccepted collection)
         const destinationRef = doc(db, "Users", email, "JobsAccepted", docId);
 
         //copy from jobs created to jobs accepted:

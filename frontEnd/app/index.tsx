@@ -39,6 +39,7 @@ const {
   // const[password, setPassword] = useState("");
   const[isLoading, setIsLoading] = useState(false);
   const { setEmail } = useAuth();
+  const[backError, setBackError] = useState("");
 
   const handleLogin = async(data: LoginFormData) => {
     setIsLoading(true);
@@ -52,14 +53,16 @@ const {
         //router.replace({pathname: "/(tabs)/HomeScreen"});
 
         router.replace({pathname: "/(tabs)/HomeScreen", params: {email: email}});
-        setIsLoading(true);
+        setIsLoading(false);
       }
       else{
-        console.log((await userLogin).message);
+        //console.log((await userLogin).message);
+        setBackError((await userLogin).message);
         setIsLoading(false);  
       }
     }catch(err: any){
-        window.alert("unable to login");
+        //window.alert("unable to login");
+        setBackError("unable to reach server, try again")
         setIsLoading(false);
         console.log("Login failed. please try again. "+ err);
       }
@@ -76,7 +79,7 @@ const {
         />
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>Login to continue</Text>
-
+        {backError && <Text style={styles.serverError}>{backError}</Text>}
         <Controller
           control={control}
           name="email"
@@ -162,4 +165,8 @@ const styles = StyleSheet.create({
     color: "#16A34A",
     fontWeight: "600",
   },
+  serverError: {
+    color: "red",
+    fontSize: 16,
+  }
 });

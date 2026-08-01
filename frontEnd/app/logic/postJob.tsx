@@ -19,6 +19,7 @@ const PostJob = async(email: string, jobTitle: string, location: string, phone: 
             PhoneNumber: phone,
             Pay: pay,
             PayType: payType,
+            JobCreatedBy: email,
             DateCreated: new Date(),
         })
 

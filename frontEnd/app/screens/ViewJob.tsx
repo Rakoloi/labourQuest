@@ -17,6 +17,7 @@ type Job = {
   docId: string;
   latitude?: number;   // CHANGED: optional location fields
   longitude?: number;
+  jobOwner: string
 };
 
 const ViewJob = () => {
@@ -44,8 +45,10 @@ const ViewJob = () => {
   };
 
   const AcceptJob = async () => {
+    
     setIsLoading(true);
-    const acceptResults = await Accept(jobData.docId, userEmail);
+    const acceptResults = await Accept(jobData.docId, userEmail, jobData.jobOwner);
+    
     if (acceptResults.result) {
       setIsLoading(false);
       setSuccessModal(true);
@@ -61,8 +64,8 @@ const ViewJob = () => {
 
   return (
     <View style={styles.screen}>
-      {isLoading && <Loader />}
-      {showSuccessModal && <SuccessPopUp size={250} message="Job Accepted!" onOk={handleOk} />}
+      <Loader visible={isLoading}/>
+      {/* {showSuccessModal && <SuccessPopUp size={250} message="Job Accepted!" onOk={handleOk} />} */}
 
       {/* CHANGED: back button */}
       <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>

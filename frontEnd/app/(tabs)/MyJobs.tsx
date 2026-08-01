@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, } from "react-native"
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Pressable } from "react-native"
 import { useState, useEffect } from "react";
 import JobCard from "../components/JobCard";
 import Loader from "../components/Loading";
 import { useAuth } from "../context/AuthContext";
 import SuccessPopUp from "../components/successPopUp";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from "expo-router";
 
 //import firebase
 import { db } from "@/config";
@@ -23,7 +24,6 @@ type Job = {
 type Status = "Active" | "Pending" | "Completed";
 
 const MyJob = () => {
-
     const [selected, setSelected] = useState<Status>("Active");
     const[isLoading, setIsLoading] = useState(true);
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -31,6 +31,10 @@ const MyJob = () => {
     const [showSuccess, setShowSuccess] = useState(false)
     const [successMsg, setSuccessMsg] = useState("");
     const insets = useSafeAreaInsets();
+
+    const[numOfPending, setNumOfPending] = useState<number>(0);
+    const[numOfActive, setNumOfActive] = useState<number>(0);
+    const[numOfComplete, setNumOfComplete] = useState<number>(0);
 
     const HandleClick = (option: Status) => {
         setSelected(option);
@@ -123,6 +127,16 @@ const MyJob = () => {
         });
 
         setJobs(jobsArray);
+        //console.log(subCollection)
+        if(subCollection === "JobsCreated"){
+            setNumOfPending(snapshot.size)
+        }
+        else if(subCollection === "JobsAccepted"){
+            setNumOfActive(snapshot.size)
+        }
+        else if(subCollection === "JobsCompleted"){
+            setNumOfComplete(snapshot.size)
+        }
        
         setIsLoading(false);
         });
@@ -142,7 +156,7 @@ const MyJob = () => {
                     ]}
                     onPress={() => HandleClick("Pending")}
                 >
-                    <Text style={[styles.number, selected === 'Pending' && styles.selectedText]}>1</Text>
+                    <Text style={[styles.number, selected === 'Pending' && styles.selectedText]}>{numOfPending}</Text>
                     <Text style={[styles.description, selected === 'Pending' && styles.selectedText]}>Pending</Text>
                 </TouchableOpacity>
 
@@ -153,7 +167,7 @@ const MyJob = () => {
                     ]}
                     onPress={() => HandleClick("Active")}
                 >
-                    <Text style={[styles.number, selected === 'Active' && styles.selectedText]}>0</Text>
+                    <Text style={[styles.number, selected === 'Active' && styles.selectedText]}>{numOfActive}</Text>
                     <Text style={[styles.description, selected === 'Active' && styles.selectedText]}>Active</Text>
                 </TouchableOpacity>
 
@@ -164,7 +178,7 @@ const MyJob = () => {
                     ]}
                     onPress={() => HandleClick("Completed")}
                 >
-                    <Text style={[styles.number, selected === 'Completed' && styles.selectedText]}>5</Text>
+                    <Text style={[styles.number, selected === 'Completed' && styles.selectedText]}>{numOfComplete}</Text>
                     <Text style={[styles.description, selected === 'Completed' && styles.selectedText]}>Completed</Text>                   
                 </TouchableOpacity>
             </View>
@@ -176,18 +190,32 @@ const MyJob = () => {
                     <Text>No jobs found</Text>
                     ) : (
                     jobs.map((job) => (
-                        <JobCard
+                        <Pressable
                             key={job.docId}
-                            docId={job.docId}
-                            title={job.title}
-                            status={job.status}
-                            description={job.description}
-                            pay={job.pay}
-                            dateCreated={job.year.toString()}
-                            location="South Africa" // replace if you store location
-                            onComplete={() => JobBtnAction("completed", job.docId)}
-                            onCancel={() => JobBtnAction("Cancel", job.docId)}
-                        />
+                            disabled={selected !== "Pending"}
+                            onPress={() => {
+                                if (selected === "Pending") {
+                                    router.push({
+                                        pathname: "/screens/EditJob",
+                                        params: {
+                                            job: JSON.stringify(job),
+                                        },
+                                    });
+                                }
+                            }}
+                        >
+                            <JobCard
+                                docId={job.docId}
+                                title={job.title}
+                                status={job.status}
+                                description={job.description}
+                                pay={job.pay}
+                                dateCreated={job.year.toString()}
+                                location="South Africa"
+                                onComplete={() => JobBtnAction("completed", job.docId)}
+                                onCancel={() => JobBtnAction("Cancel", job.docId)}
+                            />
+                        </Pressable>
                     ))
                 )}
             </View>

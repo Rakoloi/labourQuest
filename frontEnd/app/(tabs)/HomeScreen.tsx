@@ -22,6 +22,7 @@ type Job = {
   year: number;
   category: string;
   pay: string;
+  jobOwner: string;
 };
 
 const HomeScreen = () => {
@@ -32,7 +33,7 @@ const HomeScreen = () => {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [id, setId] = useState("");
     const {email} = useAuth();
-    console.log("email in HomeScreen: "+email)
+    //console.log("email in HomeScreen: "+ email)
 
     useEffect(() => {
       setIsLoading(true);
@@ -58,10 +59,12 @@ const HomeScreen = () => {
                   : new Date().getFullYear(),
                 category: data.category || "General",
                 pay: data.Pay ? `R${data.Pay}` : "R0",
+                jobOwner: data.JobCreatedBy
               };
             });
 
           setJobs(jobsArray);
+          //console.log(jobs)
           setIsLoading(false);
         },
         (error) => {

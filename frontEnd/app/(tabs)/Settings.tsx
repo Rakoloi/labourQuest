@@ -68,8 +68,6 @@ const SettingsScreen = () => {
     }
   };
 
-  console.log(userInfo)
-
   return (
     <View style={styles.screen}>
 

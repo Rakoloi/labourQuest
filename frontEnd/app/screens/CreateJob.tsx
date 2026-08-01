@@ -48,6 +48,7 @@ const CreateJob = () => {
 
   const Create = async(data: CreateJobFormData) => {
     setIsLoading(true);
+    
     const {jobTitle, jobDescription, location, cellPhone, jobPay} = data;
     if(!email){
       alert("email not found")

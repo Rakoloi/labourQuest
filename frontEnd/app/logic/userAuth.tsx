@@ -26,12 +26,11 @@ const UserAuth = async(email: string, password: string): Promise<AuthResult> => 
                 return {results: true, message: "logged in"}
             }
         }else{
-                    //console.log("document does not exist");
-            //setError("user account does not exist");
-            return {results: false, message: "user account does not exist"}
+            return {results: false, message: "accouant dont exist, create and account"}
         }
+      
     }catch{
-        return {results: false, message: "failed to log in, please try again"}
+        return {results: false, message: "incorrect credentials, please try again"}
     }
 }
 
